@@ -25,7 +25,7 @@ async function getsong(floder) {
     //geting the songs 
     //console.log(floder)
     currentfold = floder
-    let a = await fetch(`/${currentfold}/`)
+    let a = await fetch(`/spotify-clone/${currentfold}/`)
     let response = await a.text();
     let div = document.createElement("div")
     div.innerHTML = response;
@@ -46,7 +46,7 @@ async function getsong(floder) {
 
     for (let song of songs) {
         songsul.innerHTML = songsul.innerHTML + `<li>
-            <img class="limg" src="/${currentfold}/cover.jpg" alt="" srcset="">
+            <img class="limg" src="/spotify-clone/${currentfold}/cover.jpg" alt="" srcset="">
             <div class="info">
                 <div>${song.replaceAll("%20", " ")}</div>
                 <div>artist</div>
@@ -79,12 +79,12 @@ async function dispalyalbum(username, folders) {
     cardul = document.querySelector(".cardcontainer").getElementsByTagName("ul")[0]
     cardul.innerHTML = ``
     for (let nf of folders) {
-        let a = await fetch(`/songs${username}/${nf}/info.json`)
+        let a = await fetch(`/spotify-clone/songs${username}/${nf}/info.json`)
         let response1 = await a.json();
         cardul.innerHTML = cardul.innerHTML + `<li>
         
         <div class="card" >
-        <img src="/songs${username}/${nf}/cover.jpg" alt="">
+        <img src="/spotify-clone/songs${username}/${nf}/cover.jpg" alt="">
         <h2>${response1.Title}</h2>
         <p>${response1.discription}</p>
         </div>
@@ -101,7 +101,7 @@ async function dispalyalbum(username, folders) {
             //console.log(e.innerText)
             let text = e.innerText
            // console.log(`songs${username}/` + text.split("\n")[0])
-            songs = await getsong(`songs${username}/` + text.split("\n")[0])
+            songs = await getsong(`/spotify-clone/songs${username}/` + text.split("\n")[0])
             playmusic(songs[0])
            // console.log(songs)
         })
@@ -112,7 +112,7 @@ async function dispalyalbum(username, folders) {
 //fetching the folders
 async function getfold(username) {
     let f = ""
-    f = await fetch(`/songs${username}/`)
+    f = await fetch(`/spotify-clone/songs${username}/`)
     let response
     response = await f.text();
     let div = ""
@@ -125,7 +125,7 @@ async function getfold(username) {
 
     for (let index = 0; index < fold.length; index++) {
         const element = fold[index];
-        if (element.href.includes(`/songs${username}/`) && !element.href.includes(".htacces")) {
+        if (element.href.includes(`/spotify-clone/songs${username}/`) && !element.href.includes(".htacces")) {
             //folders.push(element.href.includes("/songs/"))
             folders.push(element.href.split(`/songs${username}/`)[1])
         }
@@ -137,12 +137,12 @@ async function getfold(username) {
 function playmusic(track, pause = false) {
     //let audio = new Audio("/songs/"+track)
     // console.log(currentsong)
-    currentsong.src = `/${currentfold}/` + track;
+    currentsong.src = `/spotify-clone/${currentfold}/` + track;
     if (!pause) {
         currentsong.play();
         play.src = "img/pause.svg";
     }
-    document.getElementById("songinfo").innerHTML = `<img class="limg" src="/${currentfold}/cover.jpg" alt="" srcset=""> ${track.replaceAll("%20", " ")}`
+    document.getElementById("songinfo").innerHTML = `<img class="limg" src="/spotify-clone/${currentfold}/cover.jpg" alt="" srcset=""> ${track.replaceAll("%20", " ")}`
     document.getElementById("time").innerHTML = "00:00/00:00";
 }
 
@@ -157,7 +157,7 @@ document.getElementById("loginform").addEventListener("submit", async function r
         document.querySelector(".toggleform").style.left = "120%"
         folders = await getfold(username)
         //console.log(folders)
-        let songs = await getsong(`songs${username}/${folders[0]}`)
+        let songs = await getsong(`/spotify-clone/songs${username}/${folders[0]}`)
         await dispalyalbum(`${username}`, folders)
         // console.log(songs)
         playmusic(songs[0], true)
@@ -206,7 +206,7 @@ async function main() {
     username = "default"
     folders = await getfold(username)
     console.log(folders)
-    let songs = await getsong(`songs${username}/${folders[0]}`)
+    let songs = await getsong(`spotify-clone/songs${username}/${folders[0]}`)
     await dispalyalbum(`${username}`, folders)
     console.log(songs)
     playmusic(songs[0], true)
